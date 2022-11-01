@@ -1,10 +1,7 @@
-# Lungs-Project
+## Lungs-Project
 
 Dependency
-
-<br>
-
-
+----------------------
 `` pip install -r requirement.txt``
 Tested Environment:
 win11
