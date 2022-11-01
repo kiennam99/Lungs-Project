@@ -3,9 +3,9 @@
 Dependency
 `` pip install -r requirement.txt`` for install dependency.
 
-Tested Environment
+Tested Environment:
 win11
-python 3.9.12
+, python 3.9.12
 
 Step
 ----------------------
