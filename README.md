@@ -1,5 +1,11 @@
 # Lungs-Project
 
+Dependency
+---------------------
+`` pip install -r requirement.txt`` for install dependency.
+
+Step
+----------------------
 1. Download the repo and dataset. Put them in the same folder
 3. Run  `` python code/train.py`` to train model, will create checkpoint for evaluate.
 2. Run `` python code/eval.py --pred`` to Evaluate model and get prediction.csv
