@@ -1,8 +1,11 @@
 # Lungs-Project
 
 Dependency
----------------------
 `` pip install -r requirement.txt`` for install dependency.
+
+Tested Environment
+win11
+python 3.9.12
 
 Step
 ----------------------
