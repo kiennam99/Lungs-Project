@@ -18,15 +18,13 @@ from tensorflow.keras import regularizers, optimizers
 from tensorflow.keras.layers import Dense, Conv1D, Flatten, Activation, MaxPooling1D, Dropout
 from tensorflow.keras.utils import plot_model, to_categorical
 
-
-def train(args):
+def eval(args):
     model = create_model()
-    # if args.load_model == True:
-    #     weight = tf.train.latest_checkpoint('./checkpoint')
+    weight = tf.train.latest_checkpoint('./checkpoint')
 
     root = './Dataset/Respiratory_Sound_Database/'
-    datadir = root + 'audio_and_txt_files/train/'
-    json_path = './train.json'
+    datadir = root + 'audio_and_txt_files/test/'
+    json_path = './feature.json'
 
     if os.path.exists(json_path):
         with open(json_path) as infile: 
@@ -38,22 +36,24 @@ def train(args):
         with open(json_path,'w') as output:
             json.dump(mydict, output)
 
-    X_train, X_test, y_train, y_test = preprocessing(labels, images)
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath='./checkpoint/cp.ckpt',
-                                                        save_weight_only = True,
-                                                        verbose = 1
-                                                        )
+    X_test, y_test = preprocessing_test(labels, images)
+
+    model.load_weights(weight).expect_partial()
     tf.debugging.set_log_device_placement(True)
-    model.fit(tf.constant(X_train), tf.constant(y_train), validation_data=(X_test, y_test), epochs=70,
-        batch_size=200, callbacks=[cp_callback],verbose=1)
+    loss, acc = model.evaluate(tf.constant(X_test), tf.constant(y_test),
+        batch_size=200,verbose=2)
+    print(f"Loss: {loss}, Acc: {acc}")
+    if (args.pred == True):
+        pred = model.predict(X_test)
+        prediction = np.array([np.argmax(i) for i in pred])
+        pred_dict = zip(id, prediction)
+        pd.DataFrame(pred_dict,columns=['ID','Prediction']).set_index('ID').to_csv('./prediction.csv')
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--load_model',action='store_true')
-    parser.add_argument('--load_feature',action='store_true')
-
+    parser.add_argument('--pred',action='store_true')
     args = parser.parse_args()
-    train(args)
+    eval(args)
 
 if __name__ == '__main__':
     main()
